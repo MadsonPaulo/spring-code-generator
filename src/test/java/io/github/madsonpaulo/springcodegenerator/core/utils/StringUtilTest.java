@@ -46,6 +46,16 @@ class StringUtilTest {
 				"Table name should fall back to camelCase if no description or override exists");
 	}
 
+	@Test
+	void testSnakeCaseTableName() {
+		String tableName = "user_profile";
+		String resolvedName = StringUtil.resolveJavaClassName(null, tableName);
+		assertEquals(
+				"UserProfile",
+				resolvedName,
+				"Snake_case table names should be converted to PascalCase when no description or override exists");
+	}
+
 	@ParameterizedTest
 	@MethodSource("arguments_resolveJavaAttributeName")
 	void testJavaAttributeName(String columnDescription, String columnCode, String expected) {

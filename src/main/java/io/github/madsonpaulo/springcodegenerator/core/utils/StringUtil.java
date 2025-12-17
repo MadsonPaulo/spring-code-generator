@@ -15,8 +15,22 @@ public final class StringUtil {
 	public static final Locale LOCALE = Locale.ENGLISH;
 	private static final int MAX_WORDS_IN_CLASS_NAME = 4;
 
-	private static final Set<String> UNDESIRED_WORDS = Set.of("table of ", "table from ", "table ", " of ", " and ",
-			" the ", " to ", " for ", " by ", " with ", " that ", " between ", " in ", " on ", " domain ");
+	private static final Set<String> UNDESIRED_WORDS = Set.of(
+			"table of ",
+			"table from ",
+			"table ",
+			" of ",
+			" and ",
+			" the ",
+			" to ",
+			" for ",
+			" by ",
+			" with ",
+			" that ",
+			" between ",
+			" in ",
+			" on ",
+			" domain ");
 
 	private StringUtil() {
 	}
@@ -165,8 +179,11 @@ public final class StringUtil {
 			return tableName;
 		}
 
-		int lastDigitIndex = -1;
+		if (tableName.contains("_") && !containsDigit(tableName)) {
+			return toPascalCaseFromSnakeCase(tableName);
+		}
 
+		int lastDigitIndex = -1;
 		for (int i = 0; i < tableName.length(); i++) {
 			if (Character.isDigit(tableName.charAt(i))) {
 				lastDigitIndex = i;
@@ -265,6 +282,27 @@ public final class StringUtil {
 		int descriptionPartsCount = removeUndesiredWords(description).trim().split(" ").length;
 
 		return columnPartsCount == descriptionPartsCount;
+	}
+
+	private static boolean containsDigit(String value) {
+		for (int i = 0; i < value.length(); i++) {
+			if (Character.isDigit(value.charAt(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static String toPascalCaseFromSnakeCase(String value) {
+		String[] parts = value.toLowerCase(LOCALE).split("_");
+
+		StringBuilder result = new StringBuilder();
+		for (String part : parts) {
+			if (!part.isEmpty()) {
+				result.append(capitalizeFirstLetter(part));
+			}
+		}
+		return result.toString();
 	}
 
 }
